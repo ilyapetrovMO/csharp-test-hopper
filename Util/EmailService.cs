@@ -38,30 +38,23 @@ namespace csharp_test_hopper.Util
         {
             var recipientAdressess = recipients.Select(r => new MailboxAddress(string.Empty, r));
 
-            try
+            var emailMessage = new MimeMessage();
+
+            emailMessage.From.Add(new MailboxAddress(config.FromName, mailFrom));
+            emailMessage.To.AddRange(recipientAdressess);
+            emailMessage.Subject = subject;
+            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = body };
+
+            using (var client = new SmtpClient())
             {
-                var emailMessage = new MimeMessage();
+                await client.ConnectAsync(
+                    config.MailServerAddress,
+                    Convert.ToInt32(config.MailServerPort),
+                    MailKit.Security.SecureSocketOptions.StartTls).ConfigureAwait(false);
 
-                emailMessage.From.Add(new MailboxAddress(config.FromName, mailFrom));
-                emailMessage.To.AddRange(recipientAdressess);
-                emailMessage.Subject = subject;
-                emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = body };
-
-                using (var client = new SmtpClient())
-                {
-                    await client.ConnectAsync(
-                        config.MailServerAddress,
-                        Convert.ToInt32(config.MailServerPort),
-                        MailKit.Security.SecureSocketOptions.StartTls).ConfigureAwait(false);
-
-                    await client.AuthenticateAsync(new NetworkCredential(config.UserName, config.UserPassword));
-                    await client.SendAsync(emailMessage).ConfigureAwait(false);
-                    await client.DisconnectAsync(true).ConfigureAwait(false);
-                }
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                await client.AuthenticateAsync(new NetworkCredential(config.UserName, config.UserPassword));
+                await client.SendAsync(emailMessage).ConfigureAwait(false);
+                await client.DisconnectAsync(true).ConfigureAwait(false);
             }
         }
     }
