@@ -1,5 +1,5 @@
 using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace csharp_test_hopper.Models
 {
@@ -10,6 +10,7 @@ namespace csharp_test_hopper.Models
     /// Result can be either "Failed or "OK",
     /// FailedMessage stores the Exception.Message if the email
     /// could not be sent.
+    /// CreatedAt is in UTC.
     /// </remarks>
     public class EmailEntry
     {
@@ -19,8 +20,6 @@ namespace csharp_test_hopper.Models
 
         public string Body { get; set; }
 
-        public string[] Recipients { get; set; }
-
         public string MailFrom { get; set; }
 
         public string Result { get; set; }
@@ -28,5 +27,7 @@ namespace csharp_test_hopper.Models
         public string FailedMessage { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        public List<Recipient> Recipients { get; set; }
     }
 }

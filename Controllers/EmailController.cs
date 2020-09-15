@@ -14,10 +14,10 @@ namespace csharp_test_hopper.Controllers
     {
 
         /// <value>DbContext for the email log DB</value>
-        public EmailContext Context { get; }
+        private EmailContext Context { get; }
 
         /// <value>email sender service</value>
-        public IEmailService EmailService { get; set; }
+        private IEmailService EmailService { get; }
 
         public EmailController(EmailContext context, IEmailService emailService)
         {

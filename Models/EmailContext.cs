@@ -15,7 +15,7 @@ namespace csharp_test_hopper.Models
         {
             modelBuilder.Entity<EmailEntry>(e =>
             {
-                e.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_DATE");
+                e.Property(e => e.CreatedAt).HasDefaultValueSql("now() at time zone 'utc'");
             });
             
         }
